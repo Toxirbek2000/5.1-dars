@@ -2,6 +2,13 @@ let elCountryList = document.querySelector(".list")
 let elSelect = document.querySelector(".country-select")
 let elSearchInput = document.querySelector(".search-input")
 
+let elLikeBtn = document.querySelector(".like-btn")
+let elBasketBtn = document.querySelector(".basket-btn")
+
+
+let elLikeCount = document.querySelector(".like-count")
+let elBasketCount = document.querySelector(".basket-count")
+
 function renderCountries(arr, list) {
     list.innerHTML = null
     arr.map(item => {
@@ -15,12 +22,12 @@ function renderCountries(arr, list) {
             <p class="mb-2">Capital: ${item.capital}</p>
         </div>
         <div class="flex items-center justify-between p-2">
-            <button class="w-[45px] h-[45px] border-[2px] border-black rounded-full flex items-center justify-center">
+            <button onclick="handleLikeBtn(${item.id})" class="${item.isLiked ? "bg-red-500" : ""} w-[45px] h-[45px] border-[2px] border-black rounded-full flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="black">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
             </button>
-            <button class="w-[45px] h-[45px] border-[2px] border-black rounded-full flex items-center justify-center">
+            <button onclick="handleBasketBtn(${item.id})" class="${item.isBasket ? "bg-green-400" : ""} w-[45px] h-[45px] border-[2px] border-black rounded-full flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="black">
                     <path d="M6 2c-1.1 0-2 .9-2 2v18l8-3.5 8 3.5V4c0-1.1-.9-2-2-2H6zm0 2h12v15.97l-6-2.63-6 2.63V4z"/>
                   </svg>
@@ -39,6 +46,25 @@ function renderCountries(arr, list) {
 }
 
 renderCountries(countrys, elCountryList)
+
+
+// Like Btn Click start  
+    function handleLikeBtn(id){
+    const singleObj = countrys.find(item => item.id == id)
+    singleObj.isLiked = !singleObj.isLiked  
+    renderCountries(countrys, elCountryList) 
+    elLikeCount.textContent = countrys.filter(item => item.isLiked == true).length
+    }
+// Like Btn Click  end
+// Basket btn start
+    function handleBasketBtn(id){
+    const singleObj = countrys.find(item => item.id == id)
+    singleObj.isBasket = !singleObj.isBasket 
+    renderCountries(countrys, elCountryList) 
+    elBasketCount.textContent = countrys.filter(item => item.isBasket == true).length
+    }
+
+// Basket btn end
 
 function renderSelectOption(arr, list) {
     arr.forEach(item => {
@@ -65,4 +91,19 @@ elSearchInput.addEventListener("input", function(e) {
     const value = e.target.value.toLowerCase()
     const searchedList = countrys.filter(item => item.name.toLowerCase().includes(value))
     renderCountries(searchedList, elCountryList)
+})
+
+
+// show like list
+
+elLikeBtn.addEventListener("click", function(e){
+    const likeCountry = countrys.filter(item => item.isLiked)
+    renderCountries(likeCountry, elCountryList);
+})
+
+// show basket list
+
+elBasketBtn.addEventListener("click", function(e){
+    const basketCountry = countrys.filter(item => item.isBasket)
+    renderCountries(basketCountry, elCountryList);
 })
